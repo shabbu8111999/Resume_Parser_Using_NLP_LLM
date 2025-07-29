@@ -1,0 +1,16 @@
+spacy
+pypdf
+python-docx
+nltk
+pandas
+scikit-learn
+flask
+flask-cors
+typer[all]
+tqdm
+python-dotenv
+openai
+langchain
+chromadb
+
+-e .
