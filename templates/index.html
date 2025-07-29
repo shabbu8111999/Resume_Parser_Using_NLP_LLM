@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Resume Parser - Extract & Analyze Your Resume</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet" />
+</head>
+<body>
+    <main class="container">
+        <header>
+            <h1>Resume Parser</h1>
+            <p class="subtitle">Upload your resume and get instant parsing & scoring</p>
+        </header>
+
+        {% if error %}
+            <section class="alert alert-error">
+                {{ error }}
+            </section>
+        {% endif %}
+
+        <section class="upload-section">
+            <form action="/upload" method="POST" enctype="multipart/form-data" class="upload-form" novalidate>
+                <label for="resume" class="file-label">Select your resume (PDF or DOCX):</label>
+                <input
+                    type="file"
+                    id="resume"
+                    name="resume"
+                    accept=".pdf,.docx"
+                    required
+                    aria-describedby="fileHelp"
+                />
+                <small id="fileHelp" class="form-text">Supported formats: PDF, DOCX. Max size 5MB.</small>
+                <button type="submit" class="btn-primary">Parse Resume</button>
+            </form>
+        </section>
+
+        {% if parsed %}
+            <section class="results-section" aria-live="polite">
+                <h2>Parsed Resume Data for <mark>{{ filename }}</mark></h2>
+
+                <dl class="parsed-data">
+                    <dt>Name:</dt>
+                    <dd>{{ parsed.name or 'Not found' }}</dd>
+
+                    <dt>Email:</dt>
+                    <dd>{{ parsed.email or 'Not found' }}</dd>
+
+                    <dt>Phone:</dt>
+                    <dd>{{ parsed.phone or 'Not found' }}</dd>
+
+                    <dt>Skills:</dt>
+                    <dd>
+                        {% if parsed.skills %}
+                            <ul class="skills-list">
+                                {% for skill in parsed.skills %}
+                                    <li>{{ skill }}</li>
+                                {% endfor %}
+                            </ul>
+                        {% else %}
+                            Not found
+                        {% endif %}
+                    </dd>
+
+                    <dt>Resume Score:</dt>
+                    <dd><strong>{{ parsed.score }} / 100</strong></dd>
+                </dl>
+            </section>
+        {% endif %}
+    </main>
+</body>
+</html>
